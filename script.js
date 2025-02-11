@@ -23,8 +23,11 @@ const songs = [
 // Paparkan senarai lagu pada halaman
 const songListContainer = document.getElementById('song-list');
 
-function renderSongs() {
-  songs.forEach((song, index) => {
+function renderSongs(filteredSongs = songs) {
+  // Kosongkan senarai lagu sebelum render semula
+  songListContainer.innerHTML = '';
+
+  filteredSongs.forEach((song) => {
     const songCard = document.createElement('div');
     songCard.classList.add('song-card');
 
@@ -54,5 +57,24 @@ function playSong(youtubeId) {
   `);
 }
 
-// Render senarai lagu apabila halaman dimuatkan
-document.addEventListener('DOMContentLoaded', renderSongs);
+// Fungsi untuk mencari lagu berdasarkan tajuk atau artis
+document.getElementById('search-button').addEventListener('click', function () {
+  const query = document.getElementById('search-input').value.toLowerCase();
+  const filteredSongs = songs.filter((song) => {
+    return (
+      song.title.toLowerCase().includes(query) ||
+      song.artist.toLowerCase().includes(query)
+    );
+  });
+
+  if (filteredSongs.length === 0) {
+    alert('Tiada lagu ditemui!');
+  } else {
+    renderSongs(filteredSongs);
+  }
+});
+
+// Render semua lagu apabila halaman dimuatkan
+document.addEventListener('DOMContentLoaded', function () {
+  renderSongs();
+});
