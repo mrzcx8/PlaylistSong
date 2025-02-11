@@ -1,23 +1,65 @@
-/* Gaya untuk kotak carian */
-#search-bar {
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+  text-align: center;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  overflow: hidden;
+}
+
+header {
+  background: #333;
+  color: #fff;
   padding: 20px 0;
 }
 
-#search-bar .container {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
+header h1 {
+  font-size: 36px;
 }
 
-#search-input {
-  padding: 10px;
-  font-size: 16px;
-  width: 300px;
-  border: 1px solid #ccc;
+#playlist {
+  padding: 50px 0;
+}
+
+#song-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.song-card {
+  background: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.song-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
   border-radius: 5px;
 }
 
-#search-button {
+.song-card h3 {
+  margin: 10px 0;
+  font-size: 20px;
+}
+
+.song-card button {
   padding: 10px 20px;
   font-size: 16px;
   background: #ff6f61;
@@ -27,6 +69,14 @@
   cursor: pointer;
 }
 
-#search-button:hover {
+.song-card button:hover {
   background: #e05d50;
+}
+
+footer {
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 50px;
 }
