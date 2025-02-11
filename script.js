@@ -1,33 +1,22 @@
-// Data senarai lagu (anda boleh tambah lebih banyak lagu)
-const songs = [
-  {
-    title: "Shape of You",
-    artist: "Ed Sheeran",
-    thumbnail: "https://img.youtube.com/vi/JGwWNGJdvx8/0.jpg",
-    youtubeId: "JGwWNGJdvx8"
-  },
-  {
-    title: "Blinding Lights",
-    artist: "The Weeknd",
-    thumbnail: "https://img.youtube.com/vi/4NRXx6U8ABQ/0.jpg",
-    youtubeId: "4NRXx6U8ABQ"
-  },
-  {
-    title: "Levitating",
-    artist: "Dua Lipa",
-    thumbnail: "https://img.youtube.com/vi/TUVcZfQe-Kw/0.jpg",
-    youtubeId: "TUVcZfQe-Kw"
-  }
-];
+// Masukkan API Key YouTube anda di sini
+const YOUTUBE_API_KEY = 'AIzaSyDExvx3xHuC7ZkCN7oznJCtzG99zhbgGFo'; // Gantikan dengan API Key anda
+
+// URL untuk mencari video di YouTube
+const YOUTUBE_SEARCH_URL = 'https://www.googleapis.com/youtube/v3/search';
 
 // Paparkan senarai lagu pada halaman
 const songListContainer = document.getElementById('song-list');
 
-function renderSongs(filteredSongs = songs) {
+function renderSongs(songs) {
   // Kosongkan senarai lagu sebelum render semula
   songListContainer.innerHTML = '';
 
-  filteredSongs.forEach((song) => {
+  if (songs.length === 0) {
+    songListContainer.innerHTML = '<p>Tiada lagu ditemui!</p>';
+    return;
+  }
+
+  songs.forEach((song) => {
     const songCard = document.createElement('div');
     songCard.classList.add('song-card');
 
@@ -57,24 +46,29 @@ function playSong(youtubeId) {
   `);
 }
 
-// Fungsi untuk mencari lagu berdasarkan tajuk atau artis
+// Fungsi untuk mencari lagu menggunakan API YouTube
 document.getElementById('search-button').addEventListener('click', function () {
-  const query = document.getElementById('search-input').value.toLowerCase();
-  const filteredSongs = songs.filter((song) => {
-    return (
-      song.title.toLowerCase().includes(query) ||
-      song.artist.toLowerCase().includes(query)
-    );
-  });
-
-  if (filteredSongs.length === 0) {
-    alert('Tiada lagu ditemui!');
-  } else {
-    renderSongs(filteredSongs);
+  const query = document.getElementById('search-input').value.trim();
+  if (!query) {
+    alert('Sila masukkan nama lagu atau artis!');
+    return;
   }
-});
 
-// Render semua lagu apabila halaman dimuatkan
-document.addEventListener('DOMContentLoaded', function () {
-  renderSongs();
+  // Panggil API YouTube
+  fetch(`${YOUTUBE_SEARCH_URL}?part=snippet&q=${encodeURIComponent(query)}&type=video&key=${YOUTUBE_API_KEY}`)
+    .then((response) => response.json())
+    .then((data) => {
+      const songs = data.items.map((item) => ({
+        title: item.snippet.title,
+        artist: item.snippet.channelTitle,
+        thumbnail: item.snippet.thumbnails.medium.url,
+        youtubeId: item.id.videoId
+      }));
+
+      renderSongs(songs);
+    })
+    .catch((error) => {
+      console.error('Ralat:', error);
+      alert('Gagal mencari lagu. Sila cuba lagi.');
+    });
 });
